@@ -238,10 +238,10 @@ export class example extends plugin {
             return true;
         }
         // 清理今日已经成为别人老婆的用户和自己
-        curGroupList.filter(user => {
+        const tempList = curGroupList.filter(user => {
             return !savedGroupList.find(savedUser => (savedUser.wife_id === user.user_id && savedUser.wifeDate === this.getCurrentDate()) || user.user_id === e.user_id);
         });
-        const randomWife = lodash.sample(curGroupList);
+        const randomWife = lodash.sample(tempList);
         //发送老婆
         let msg = [
             segment.at(e.user_id),
