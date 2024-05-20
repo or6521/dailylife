@@ -39,6 +39,17 @@ export class example extends plugin {
     getCurrentDate(){
         return moment().format('YYYY-MM-DD');
     };
+    // 当用户存在但日期不是今天时，reset一下用户数据
+    resetUser(user){
+        if(user && user.wifeDate !== this.getCurrentDate()){
+            user.wifeId = null;
+            user.wifeName = null;
+            user.wifeDate = null;
+            user.ntrDate = null;
+            user.lockDate = null;
+            user.isDivorced = false;
+        }
+    };
     // 获取当前群成员列表
     async getCurrentGroupList(e){
         const groupInfo = await e.group.getMemberMap();
@@ -61,6 +72,7 @@ export class example extends plugin {
         // 获取群成员列表list
         const savedGroupList = await this.getSavedGroupList(e.group_id);
         const curUser = savedGroupList.find(user => user.user_id === e.user_id);
+        this.resetUser(curUser);
         if(!curUser || !curUser.wifeId || curUser.wifeDate !== this.getCurrentDate()){
             let msg = ['你今天还没有老婆呢～'];
             e.reply(msg);//发送完成
@@ -109,6 +121,7 @@ export class example extends plugin {
         // 获取群成员列表list
         const savedGroupList = await this.getSavedGroupList(e.group_id);
         const curUser = savedGroupList.find(user => user.user_id === e.user_id);
+        this.resetUser(curUser);
         // 已经有老婆的用户
         if(curUser && curUser.wifeDate === this.getCurrentDate() && curUser.wifeId){
             let msg = ['让我们来猎杀那些陷入黑暗中的牛头人吧！'];
@@ -125,13 +138,14 @@ export class example extends plugin {
     async handleNTR(e){
         const target = e.message.filter(m => m.type === 'at')
         if(!target[0]){
-            let msg = ['你想求谁别牛你？'];
+            let msg = ['你要牛谁？'];
             e.reply(msg);//发送完成
             return;
         }
         // 获取群成员列表list
         const savedGroupList = await this.getSavedGroupList(e.group_id);
         const curUser = savedGroupList.find(user => user.user_id === e.user_id);
+        // 这里不用reset，因为可以凭空牛人
         if(curUser && curUser.ntrDate === this.getCurrentDate()){
             let msg = ['你今天已经NTR过了，牛头虽好，可不要贪杯哦～'];
             e.reply(msg);//发送完成
@@ -182,6 +196,7 @@ export class example extends plugin {
         // 获取群成员列表list
         const savedGroupList = await this.getSavedGroupList(e.group_id);
         let curUser = savedGroupList.find(user => user.user_id === e.user_id);
+        this.resetUser(curUser);
         if(!curUser || curUser.wifeDate !== this.getCurrentDate() || !curUser.wifeId){
             let msg = ['你今天还没有老婆呢～'];
             e.reply(msg);//发送完成
@@ -211,6 +226,7 @@ export class example extends plugin {
         const savedGroupList = await this.getSavedGroupList(e.group_id);
         // 已经有老婆的用户
         const curUser = savedGroupList.find(user => user.user_id === e.user_id);
+        this.resetUser(curUser);
         if(curUser && curUser.wifeDate === this.getCurrentDate() && curUser.wifeId){
             let msg = [
                 segment.at(e.user_id),
