@@ -252,21 +252,21 @@ export class example extends plugin {
             segment.at(e.user_id),
             "\n你今天的群老婆是",
             segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${randomWife.user_id}`),
-            `【${randomWife.nickname}】(${randomWife.user_id})`
+            `【${randomWife.card || randomWife.nickname}】(${randomWife.user_id})`
         ];
         e.reply(msg);//发送完成
 
         // 更新群成员列表今日老婆信息
         const userInfo = {
             user_id: e.user_id,
-            nickname: e.nickname,
+            nickname: e.card || e.nickname,
             wifeId: randomWife.user_id,
-            wifeName: randomWife.nickname,
+            wifeName: randomWife.card || randomWife.nickname,
             wifeDate: this.getCurrentDate(),
         }
         if (curUser) {
             curUser.wifeId = randomWife.user_id;
-            curUser.wifeName = randomWife.nickname;
+            curUser.wifeName = randomWife.card || randomWife.nickname;
             curUser.wifeDate = this.getCurrentDate();
         }else{
             savedGroupList.push(userInfo);
