@@ -44,8 +44,8 @@ export class example extends plugin {
             let msg = [
                 segment.at(e.user_id),
                 "\n你今天的二次元老婆是",
-                segment.image(`https://q1.qlogo.cn/g?b=qq&s=0&nk=${curUser.wife}`),
-                `【${curUser.wife}】`
+                segment.image(`resources/wife/${curUser.wife}`),
+                `【${curUser.wife.split('.')[0]}】`
             ];
             e.reply(msg);//发送完成
             return true;
